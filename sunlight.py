@@ -2,9 +2,7 @@ import appdaemon.plugins.hass.hassapi as hass
 import datetime
                                      
 #
-# App to turn lights on when motion detected then off again after a delay
-# Use with constraints to activate only in specific mode
-#      
+# Monitor exterior lux and suggest interior levels accordingly     
 # Args:
 # Release Notes
 #             
