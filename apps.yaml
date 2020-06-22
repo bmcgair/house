@@ -1,0 +1,324 @@
+---
+porch:
+  module: porch_deck
+  class: PorchAndDeck
+  sunset_offset: 15
+
+front_door:
+  module: lockup
+  class: LockUp
+  door_sensor: binary_sensor.front_door_sensor_contact
+  door_lock: lock.lock_fd
+
+dtg_door:
+  module: lockup
+  class: LockUp
+  door_sensor: binary_sensor.door_to_the_garage_sensor_contact
+  door_lock: lock.lock_dtg
+
+garage_door:
+  module: garage_door
+  class: GarageDoor
+
+de1:
+  module: decent
+  class: decent
+
+office_closet:
+  module: closet
+  class: Closet
+  closet_sensor: binary_sensor.office_closet_sensor_contact
+  closet_switch:  light.office_closet
+
+bedroom_closet:
+  module: closet
+  class: Closet
+  closet_sensor: binary_sensor.bedroom_closet_sensor_contact
+  closet_switch: light.bedroom_closet
+
+hvac:
+  module: hvac
+  class: hvac
+  windowsDoors: group.hvac_monitor
+  lower: 68
+  upper: 73
+
+sunlight:
+  module: sunlight
+  class: Sunlight
+  constrain_start_time: sunrise
+  constrain_end_time: sunset
+
+livingroom_av:
+  module: auto_av
+  class: AutoAV
+  zone: livingroom
+  sensor: binary_sensor.motion_living_room_motion
+  speakers: switch.living_room_subwoofer,media_player.sony_810es
+  video_switcher: media_player.sony_810es
+  display: media_player.livingroom_tv
+  display_switch: light.livingroom_tv
+  constrain_input_select: input_select.holman_mode,Present,Guest,Cleaning
+  delay: 9000
+
+kitchen_av:
+  module: auto_av
+  class: AutoAV
+  sensor: binary_sensor.motion_kitchen_rear_motion
+  speakers: switch.kitchen_speakers
+  constrain_input_select: input_select.holman_mode,Present,Guest,Cleaning
+  delay: 9000
+
+kitchen_rear:
+  module: auto_lights_mqtt
+  class: AutoLightsMqtt
+  sensor: motion-kitchen-rear
+  leader: kitchen-rear
+  followers: kitchen-rear-followers
+  room: kitchen-rear-lights
+  hold: light.kitchen_hold
+  constrain_input_select: input_select.holman_mode,Present,Guest,Night
+  delay: 420
+  high: 80
+  mid: 30
+  low: 15
+  zone: west
+  night: 15
+  dependencies:
+   - sunlight
+
+kitchen_front:
+  module: auto_lights_mqtt
+  class: AutoLightsMqtt
+  sensor: motion-kitchen-front
+  leader: kitchen-sink
+  followers: kitchen-front-followers
+  room: kitchen-front-lights
+  hold: light.kitchen_hold
+  constrain_input_select: input_select.holman_mode,Present,Guest
+  delay: 420
+  high: 100
+  mid: 60
+  low: 15
+  follower_level: 100
+  zone: none
+  dependencies:
+   - sunlight
+
+diningroom:
+  module: auto_lights_mqtt
+  class: AutoLightsMqtt
+  sensor: motion-dining
+  leader: dining-room-light
+  room: dining-room-light
+  hold: light.dining_room_hold
+  constrain_input_select: input_select.holman_mode,Present,Guest
+  delay: 420
+  high: 80
+  mid: 30
+  low: 15
+  zone: east
+  dependencies:
+   - sunlight
+
+livingroom:
+  module: auto_lights_mqtt
+  class: AutoLightsMqtt
+  sensor: motion-living-room
+  leader: living-room-table
+  followers: living-room-followers
+  room: living-room-lights
+  hold: light.living_room_hold
+  constrain_input_select: input_select.holman_mode,Present,Guest
+  delay: 420
+  high: 65
+  mid: 30
+  low: 15
+  zone: east
+  dependencies:
+   - sunlight
+
+bedroom:
+  module: auto_lights_mqtt
+  class: AutoLightsMqtt
+  sensor: motion-bedroom
+  leader: bedside-lights
+  followers: bedroom-light
+  room: bedroom-lights
+  hold: light.bedroom_hold
+  constrain_input_select: input_select.holman_mode,Present,Guest
+  delay: 420
+  high: 65
+  mid: 30
+  low: 0
+  warm: 11
+  zone: east
+  dependencies:
+   - sunlight
+
+bath:
+  module: auto_lights_mqtt
+  class: AutoLightsMqtt
+  sensor: motion-bath
+  leader: bathroom-ceiling-light
+  room: bathroom-ceiling-light
+  hold: light.bathroom_hold
+  constrain_input_select: input_select.holman_mode,Present,Guest,Night
+  delay: 240
+  high: 80
+  mid: 30
+  low: 0
+  warm: 11
+  zone: west
+  night: 10
+  dependencies:
+   - sunlight
+
+office:
+  module: auto_lights_mqtt
+  class: AutoLightsMqtt
+  sensor: motion-office
+  leader: corner-light
+  followers: office-followers
+  hold: light.office_hold
+  room: office-lights
+  constrain_input_select: input_select.holman_mode,Present,Guest
+  delay: 420
+  high: 65
+  mid: 30
+  low: 0
+  warm: 11
+  zone: west
+  dependencies:
+   - sunlight
+
+hallway:
+  module: auto_lights_mqtt
+  class: AutoLightsMqtt
+  sensor: motion-hallway
+  leader: hallway-ceiling-light
+  room: hallway-ceiling-light
+  hold: light.hallway_hold
+  constrain_input_select: input_select.holman_mode,Present,Guest,Night
+  delay: 240
+  high: 100
+  mid: 100
+  low: 15
+  zone: west
+  night: 10
+  pre: light.hallway_pre
+  dependencies:
+   - sunlight
+
+garage:
+  module: auto_lights_mqtt
+  class: AutoLightsMqtt
+  sensor: motion-garage
+  leader: garage-east
+  followers: garage-followers
+  room: garage-lights
+  hold: light.garage_hold
+  constrain_input_select: input_select.holman_mode,Present,Guest,Cleaning
+  delay: 240
+  high: 100
+  low: 0
+  zone: none
+  dependencies:
+   - sunlight
+
+attic:
+  module: auto_lights_mqtt
+  class: AutoLightsMqtt
+  sensor: motion-attic
+  leader: attic-1
+  followers: attic-2
+  room: attic-lights
+  hold: light.attic_hold
+  constrain_input_select: input_select.holman_mode,Present,Guest,Cleaning
+  delay: 240
+  high: 100
+  low: 0
+  zone: none
+  dependencies:
+   - sunlight
+
+laundry:
+  module: auto_lights_mqtt
+  class: AutoLightsMqtt
+  sensor: motion-stairs
+  leader: basement-stairs
+  followers: laundry-followers
+  room: laundry-lights
+  hold: light.basement_hold
+  constrain_input_select: input_select.holman_mode,Present,Guest,Cleaning
+  delay: 300
+  high: 100 
+  low: 0
+  zone: none
+  dependencies:
+   - sunlight
+
+shop:
+  module: auto_lights_mqtt
+  class: AutoLightsMqtt
+  sensor: motion-shop
+  leader: basement-east
+  followers: shop-followers
+  switches: shop-followers
+  room: shop-lights-group
+  hold: light.basement_hold
+  constrain_input_select: input_select.holman_mode,Present,Guest
+  delay: 420
+  high: 100 
+  low: 0
+  zone: none
+  dependencies:
+   - sunlight
+
+hotwater_mgr:
+  module: hotwater_mgr
+  class: HotwaterMgr
+  switch: light.alexa_hotwater
+  dish_trigger: binary_sensor.dishwasher_contact
+  
+hotwater_loop:
+  module: hotwater_loop
+  class: HotWaterLoop
+  motion_sensors: binary_sensor.motion_bath_motion,binary_sensor.motion_kitchen_front_motion
+  temp_sensor: sensor.hot_water_tank_temperature
+  constrain_input_select: input_select.holman_mode,Present,Guest,Cleaning
+
+espresso_off:
+  module: scheduler
+  class: atDaily
+  state: "off"
+  time: "11:30am"
+  myentities: group.espresso
+
+alarm_set:
+  module: scheduler
+  class: atDaily
+  state: "alarm"
+  time: "4:15am"
+  myentities: light.alarm_clock
+
+wakeup:
+  module: wakeup
+  class: WakeUp
+  alarm_switch: light.alarm_clock
+  constrain_input_select: input_select.holman_mode,Present,Guest,Night
+  lower: 68
+  upper: 73
+
+modes:
+  module: modes
+  class: Modes
+  alexa_mode_switch: light.alexa_mode
+  timers: "shop,laundry,garage,hallway,office,bath,bedroom,diningroom,livingroom,kitchen_front,kitchen_rear"
+  lower: 68
+  upper: 73
+
+bikes:
+  module: bikes
+  class: Bikes
+  constrain_input_select: input_select.holman_mode,Present
